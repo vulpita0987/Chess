@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calendar-container {
+            width: 350px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .controls select {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            width: 14.28%; /* 7 columns (days) */
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+
+        .today {
+            background-color: #007BFF;
+            color: white;
+            font-weight: bold;
+        }
+
+        .highlighted {
+            background-color: #28a745; /* Green background for highlighted range */
+            color: white;
+            cursor: pointer;
+        }
+
+        .empty {
+            background-color: #e9e9e9;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calendar-container">
+    <div class="calendar-header">
+        <div class="controls">
+            <select id="month-select"></select>
+            <select id="year-select"></select>
+        </div>
+        <span id="calendar-title">August 2024</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body">
+            <!-- Calendar days will be generated dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const monthSelect = document.getElementById('month-select');
+    const yearSelect = document.getElementById('year-select');
+    const calendarTitle = document.getElementById('calendar-title');
+    const calendarBody = document.getElementById('calendar-body');
+
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    // Populate the month select
+    months.forEach((month, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = month;
+        monthSelect.appendChild(option);
+    });
+
+    // Populate the year select starting from 2024
+    const startYear = 2024;
+    const currentYear = new Date().getFullYear();
+    for (let year = startYear; year <= currentYear + 10; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+
+    // Set the current month and year as selected
+    monthSelect.value = new Date().getMonth();
+    yearSelect.value = currentYear;
+
+    function generateCalendar(month, year) {
+        // Clear previous calendar
+        calendarBody.innerHTML = '';
+
+        // Set the calendar title
+        calendarTitle.textContent = `${months[month]} ${year}`;
+
+        // Get the first day of the month and the number of days in the month
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Highlight range from 22 September 2024 to 28 September 2024
+        const highlightStart = new Date(2024, 8, 22); // 22 September 2024
+        const highlightEnd = new Date(2024, 8, 28); // 28 September 2024
+
+        // Create calendar rows and cells
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+            const row = document.createElement('tr');
+
+            for (let j = 0; j < 7; j++) {
+                const cell = document.createElement('td');
+
+                if (i === 0 && j < firstDay) {
+                    // Empty cells before the first day of the month
+                    cell.classList.add('empty');
+                } else if (date > daysInMonth) {
+                    // Empty cells after the last day of the month
+                    cell.classList.add('empty');
+                } else {
+                    // Days of the month
+                    cell.textContent = date;
+
+                    const currentDate = new Date(year, month, date);
+
+                    // Highlight the range if it falls within 22-28 September 2024
+                    if (currentDate >= highlightStart && currentDate <= highlightEnd) {
+                        cell.classList.add('highlighted');
+                        // Add click event listener to highlighted dates
+                        cell.addEventListener('click', () => {
+                            alert("The availability for the selected date is between 2:00 and 4:00");
+                        });
+                    }
+
+                    // Highlight today if it matches the current date
+                    if (
+                        date === new Date().getDate() &&
+                        year === currentYear &&
+                        month === new Date().getMonth()
+                    ) {
+                        cell.classList.add('today');
+                    }
+
+                    date++;
+                }
+
+                row.appendChild(cell);
+            }
+
+            calendarBody.appendChild(row);
+        }
+    }
+
+    // Update calendar on month or year change
+    monthSelect.addEventListener('change', () => {
+        generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+    });
+
+    yearSelect.addEventListener('change', () => {
+        generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+    });
+
+    // Initial calendar generation
+    generateCalendar(new Date().getMonth(), currentYear);
+</script>
+
+</body>
+</html>

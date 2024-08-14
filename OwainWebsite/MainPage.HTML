@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Div with Chess Title and Flipping Image</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Stack elements vertically */
+            height: 100vh;
+            background-color: #d3d3d3; /* Light grey background for the whole page */
+            font-family: Arial, sans-serif;
+        }
+
+        .centered-div {
+            width: 100%;
+            padding: 0 30px 30px 30px; /* Removed padding from above and added 20px padding below */
+            font-size: 2em;
+            font-weight: bold;
+            color: black; /* Title color set to black */
+            text-align: center;
+            background-color: #d3d3d3; /* Same grey tint as the background */
+            border-radius: 10px;
+            margin-bottom: 20px; /* Add space between title and the container below */
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .left-div {
+            flex: 1.2; /* Increased the width of the left div by 20% */
+            padding: 18px; /* Reduced padding to decrease height by approximately 10% */
+            background-color: white;
+            border-radius: 10px;
+            margin: 0 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .right-div {
+            flex: 0.8; /* Decreased the width of the right div to balance the left div increase */
+            padding: 18px;
+            background-color: white;
+            border-radius: 10px;
+            margin: 0 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .right-div img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+      
+        .left-div a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .left-div a:hover {
+            text-decoration: underline;
+        }
+
+        .flip-card {
+            width: 100%;
+            height: 800px; /* Increase the height for the flip card */
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flip-card img {
+            width: 100%;
+            height: 100%; /* Make the image fill the flip card div */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            backface-visibility: hidden; /* Hide the back face */
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: cover; /* Ensure the image covers the entire div */
+        }
+
+        .flip-card img.back {
+            transform: rotateY(180deg); /* Rotate the back image */
+        }
+
+        .flip-card.flipped {
+            transform: rotateY(180deg); /* Rotate the entire card */
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="centered-div">Pay for your spot today</div>
+
+<div class="container">
+    <div class="left-div">
+        <!-- Content for the left div goes here -->
+        Information <br>
+        Information <br>
+        Information <br> <br>
+        Check our class availability for the following schools:<br>
+        - <a href="School1.HTML">School 1</a><br>
+        - School 2<br>
+        - School 3<br>
+        - School 4<br>
+        - School 5<br>
+
+    </div>
+    <div class="right-div">
+        <!-- Flipping image container -->
+        <div class="flip-card" onclick="flipImage()">
+            <img src="Chess.jpg" alt="Chessboard with chess pieces" class="front">
+            <img src="Chess2.jpg" alt="Alternate Chess Image" class="back">
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    function flipImage() {
+        const flipCard = document.querySelector('.flip-card');
+        flipCard.classList.toggle('flipped');
+    }
+</script>
+
+
+
+</body>
+</html>
